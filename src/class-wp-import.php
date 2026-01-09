@@ -9,10 +9,10 @@
 use WordPress\DataLiberation\URL\WPURL;
 use function WordPress\DataLiberation\URL\wp_rewrite_urls;
 
-   
 /**
  * WordPress importer class.
  */
+
 class WP_Import extends WP_Importer {
 	public $max_wxr_version = 1.2; // max. supported WXR version
 
@@ -1357,7 +1357,7 @@ class WP_Import extends WP_Importer {
 		$post_id = wp_insert_attachment( $post, $upload['file'] );
 		wp_update_attachment_metadata( $post_id, wp_generate_attachment_metadata( $post_id, $upload['file'] ) );
 
-			// remap resized image URLs, works by stripping the extension and remapping the URL stub.
+		// remap resized image URLs, works by stripping the extension and remapping the URL stub.
 		if ( preg_match( '!^image/!', $info['type'] ) ) {
 			$parts     = pathinfo( $url );
 			$parts_new = pathinfo( $upload['url'] );
@@ -1368,12 +1368,9 @@ class WP_Import extends WP_Importer {
 
 			$name     = basename( $parts['basename'], ".{$parts['extension']}" );
 			$name_new = basename( $parts_new['basename'], ".{$parts_new['extension']}" );
-
 			$this->url_remap[ $parts['dirname'] . '/' . $name ] =
 				$parts_new['dirname'] . '/' . $name_new;
 		}
-
-
 
 		return $post_id;
 	}
