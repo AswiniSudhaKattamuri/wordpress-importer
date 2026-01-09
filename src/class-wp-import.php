@@ -1357,15 +1357,21 @@ class WP_Import extends WP_Importer {
 		wp_update_attachment_metadata( $post_id, wp_generate_attachment_metadata( $post_id, $upload['file'] ) );
 
 		// remap resized image URLs, works by stripping the extension and remapping the URL stub.
-		if ( preg_match( '!^image/!', $info['type'] ) ) {
-			$parts = pathinfo( $url );
-			$name  = basename( $parts['basename'], ".{$parts['extension']}" ); // PATHINFO_FILENAME in PHP 5.2
+	if ( preg_match( '!^image/!', $info['type'] ) ) {
+    $parts     = pathinfo( $url );
+    $parts_new = pathinfo( $upload['url'] );
 
-			$parts_new = pathinfo( $upload['url'] );
-			$name_new  = basename( $parts_new['basename'], ".{$parts_new['extension']}" );
+    if ( empty( $parts['extension'] ) || empty( $parts_new['extension'] ) ) {
+        return $post_id;
+    }
 
-			$this->url_remap[ $parts['dirname'] . '/' . $name ] = $parts_new['dirname'] . '/' . $name_new;
-		}
+    $name     = basename( $parts['basename'], ".{$parts['extension']}" );
+    $name_new = basename( $parts_new['basename'], ".{$parts_new['extension']}" );
+
+    $this->url_remap[ $parts['dirname'] . '/' . $name ] =
+        $parts_new['dirname'] . '/' . $name_new;
+}
+
 
 		return $post_id;
 	}
